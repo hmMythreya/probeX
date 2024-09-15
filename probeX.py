@@ -5,6 +5,7 @@ from scapy.all import sr
 from scapy.all import IP
 from scapy.all import TCP
 from scapy.all import ICMP
+from scapy.all import RandShort
 from argparse import ArgumentParser
 from terminalPrinter import terminalPrinter as printc
 from colorama import Fore
