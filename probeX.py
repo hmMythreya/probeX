@@ -2,11 +2,15 @@
 
 # Import all the modules required
 from scapy.all import sr
+from scapy.all import IP
+from scapy.all import TCP
+from scapy.all import ICMP
 from argparse import ArgumentParser
+from terminalPrinter import terminalPrinter as printc
 import sys
 
 # Main Scan Function
-def scan(src_ip = None, src_port = None, dest_ip, dest_port):
+def scan(dest_ip, dest_port, src_ip):
     
     # Create IP and TCP packet based on args.
     if not src_ip:
@@ -14,10 +18,7 @@ def scan(src_ip = None, src_port = None, dest_ip, dest_port):
     else:
         ip_packet = IP(src=src_ip, dst=dest_ip)
 
-    if not src_port:
-        tcp_packet = TCP(sport=RandShort(), dport=dest_port, flags="S")
-    else:
-        tcp_packet = TCP(sport=src_port, dport=dest_port, flags="S")
+    tcp_packet = TCP(sport=RandShort(), dport=dest_port, flags="S")
 
     answered, unanswered = sr(ip_packet / tcp_packet, timeout=1, verbose=False)
 
@@ -52,4 +53,38 @@ def main():
             epilog = "Thanks for using probeX. check https://github.com/hmMythreya/probeX")
 
     if(len(sys.argv)==1):
-        print("")
+        printc(["Please Enter", " IP", " to scan: "], [Fore.WHITE, Fore.RED, Fore.WHITE])
+        ip = input()
+        printc(["Please Enter", " port", " to scan: "], [Fore.WHITE, Fore.RED, Fore.WHITE])
+        port = input()
+        src = None
+
+    else:
+        parser.add_argument("-ip","--ip",type=str,action="store",required=True,metavar="Target IP to be scanned",nargs=1)
+        parser.add_argument("-p","--port",type=str,action="store",required=True,metavar="Target port to be scanned",nargs=1)
+        parser.add_argument("-s","--spoof",action="store_true")
+        parser.add_argument("spoof_ip",type=str,action="store",required=False,nargs=1)
+        args = parser.parse_args()
+
+        if(args.spoof):
+            if not args.spoof_ip:
+                printc("No source IP entered. Exiting...")
+                exit()
+
+            printc("\nWARNING: SPOOFING SOURCE IP MAYBE ILLEGAL AND THE AUTHOR OF THIS TOOL IS NOT RESPONSIBLE FOR IT'S MISUSE. MAKE SURE YOU KNOW WHAT YOU ARE DOING",Fore.RED)
+            printc("\n\nAre you sure you want to continue (type iamsure): ",Fore.WHITE)
+            cont = input()
+            if cont != "iamsure":
+                exit()
+        
+        ip = args.ip
+        port = args.port
+        src = args.spoof_ip
+
+    printc(["Scanning Destination IP: ", str(ip), " Port: ", str(port)],[Fore.GREEN,Fore.RED,Fore.GREEN,Fore.RED])
+
+    result = scan(ip, port, src)
+        
+    print()
+    printc(["Port ",str(port), " at IP ",str(ip)," is ", str(result[2])],[Fore.GREEN,Fore.RED,Fore.GREEN,Fore.RED,Fore.YELLOW])
+
