@@ -13,9 +13,6 @@ def terminalPrinter(messageList, colorList):
     global colorInit
     global colorReset
 
-    if (not isInteractiveMode and not overrideInteractiveMode):
-        return
-
     if(colorInit):
         colorama_reinit()
     else:
