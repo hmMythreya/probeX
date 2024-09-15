@@ -10,6 +10,7 @@ from argparse import ArgumentParser
 from terminalPrinter import terminalPrinter as printc
 from colorama import Fore
 import sys
+import time
 
 # Main Scan Function
 def scan(dest_ip, dest_port, src_ip):
@@ -20,9 +21,10 @@ def scan(dest_ip, dest_port, src_ip):
     else:
         ip_packet = IP(src=src_ip, dst=dest_ip)
 
-    tcp_packet = TCP(sport=RandShort(), dport=dest_port, flags="S")
+    s_port = RandShort()
+    tcp_packet = TCP(sport=s_port, dport=dest_port, flags="S")
 
-    answered, unanswered = sr(ip_packet / tcp_packet, timeout=1, verbose=False)
+    answered, unanswered = sr(ip_packet / tcp_packet, timeout=1, verbose=0)
 
     # Check if it is filtered
     for packet in unanswered:
@@ -34,7 +36,7 @@ def scan(dest_ip, dest_port, src_ip):
             flags = recv.getlayer(TCP).sprintf("%flags%")
             if(flags == "SA"):
                 tcp_packet.flags = "R"
-                send_rst = sr(ip_packet / tcp_packet, timeout=1, verbose=True)
+                send_rst = sr(ip_packet / tcp_packet, timeout=1, verbose=False)
                 return (dest_ip, dest_port, "Open")
 
             elif (flags=="RA" or flags=="R"):
@@ -49,15 +51,19 @@ def scan(dest_ip, dest_port, src_ip):
 
 # Main Function
 if __name__ == "__main__":
+    printc(["#","-"*52,"#\n"],[Fore.BLUE,Fore.BLUE,Fore.BLUE])
+    printc(["#"," "*5,"Welcome to Mythreya's Port Scanner: probeX"," "*5,"#\n"],[Fore.BLUE,Fore.WHITE,Fore.YELLOW,Fore.WHITE,Fore.BLUE])
+    printc(["#","-"*52,"#\n"],[Fore.BLUE,Fore.BLUE,Fore.BLUE])
+    
     parser = ArgumentParser(
             prog = "python3 probeX.py",
             description = "CLI tool to scan exactly 1 port at 1 host. Comes with spoofing",
             epilog = "Thanks for using probeX. check https://github.com/hmMythreya/probeX")
 
     if(len(sys.argv)==1):
-        printc(["Please Enter", " IP", " to scan: "], [Fore.WHITE, Fore.RED, Fore.WHITE])
+        printc(["Please Enter", " IP", " to scan: "], [Fore.WHITE, Fore.GREEN, Fore.WHITE])
         ip = input()
-        printc(["Please Enter", " port", " to scan: "], [Fore.WHITE, Fore.RED, Fore.WHITE])
+        printc(["Please Enter", " port", " to scan: "], [Fore.WHITE, Fore.GREEN, Fore.WHITE])
         port = int(input())
         src = None
 
@@ -83,8 +89,12 @@ if __name__ == "__main__":
         port = args.port
         src = args.spoof_ip
 
-    printc(["Scanning Destination IP: ", str(ip), " Port: ", str(port)],[Fore.GREEN,Fore.RED,Fore.GREEN,Fore.RED])
+    printc(["Scanning Destination IP: ", str(ip), " Port: ", str(port)],[Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.GREEN])
     print()
+    start = time.time()
     result = scan(ip, port, src)
-        
-    printc(["Port ",str(port), " at IP ",str(ip)," is ", str(result[2])],[Fore.GREEN,Fore.RED,Fore.GREEN,Fore.RED,Fore.YELLOW])
+    end = time.time()
+
+    printc(["Port ",str(port), " at IP ",str(ip)," is ", result[2]],[Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.YELLOW])
+    printc(["\nTotal time taken: ",str(round(end-start,3)),"s"],[Fore.WHITE,Fore.YELLOW,Fore.YELLOW])
+    print()
