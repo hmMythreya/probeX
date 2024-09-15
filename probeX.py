@@ -58,7 +58,7 @@ if __name__ == "__main__":
         printc(["Please Enter", " IP", " to scan: "], [Fore.WHITE, Fore.RED, Fore.WHITE])
         ip = input()
         printc(["Please Enter", " port", " to scan: "], [Fore.WHITE, Fore.RED, Fore.WHITE])
-        port = input()
+        port = int(input())
         src = None
 
     else:
