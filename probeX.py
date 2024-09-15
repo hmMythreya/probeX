@@ -7,6 +7,7 @@ from scapy.all import TCP
 from scapy.all import ICMP
 from argparse import ArgumentParser
 from terminalPrinter import terminalPrinter as printc
+from colorama import Fore
 import sys
 
 # Main Scan Function
@@ -46,7 +47,7 @@ def scan(dest_ip, dest_port, src_ip):
             return (dest_ip, dest_port, "check")
 
 # Main Function
-def main():
+if __name__ == "__main__":
     parser = ArgumentParser(
             prog = "python3 probeX.py",
             description = "CLI tool to scan exactly 1 port at 1 host. Comes with spoofing",
@@ -87,4 +88,3 @@ def main():
         
     print()
     printc(["Port ",str(port), " at IP ",str(ip)," is ", str(result[2])],[Fore.GREEN,Fore.RED,Fore.GREEN,Fore.RED,Fore.YELLOW])
-
