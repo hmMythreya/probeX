@@ -1,5 +1,5 @@
 from colorama import init as colorama_init
-from colorama import deinit as colorama_init
+from colorama import deinit as colorama_deinit
 from colorama import reinit as colorama_reinit
 from colorama import Fore
 from colorama import Style
