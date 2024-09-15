@@ -91,9 +91,9 @@ if __name__ == "__main__":
 
     printc(["Scanning Destination IP: ", str(ip), " Port: ", str(port)],[Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.GREEN])
     print()
-    start = time.time()
+    start = time.process_time()
     result = scan(ip, port, src)
-    end = time.time()
+    end = time.process_time()
 
     printc(["Port ",str(port), " at IP ",str(ip)," is ", result[2]],[Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.YELLOW])
     printc(["\nTotal time taken: ",str(round(end-start,3)),"s"],[Fore.WHITE,Fore.YELLOW,Fore.YELLOW])
