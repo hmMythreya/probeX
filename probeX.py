@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     else:
         parser.add_argument("-ip","--ip",type=str,action="store",required=True,metavar="Target IP to be scanned",nargs=1)
-        parser.add_argument("-p","--port",type=str,action="store",required=True,metavar="Target port to be scanned",nargs=1)
+        parser.add_argument("-p","--port",type=int,action="store",required=True,metavar="Target port to be scanned",nargs=1)
         parser.add_argument("-s","--spoof",action="store_true")
         parser.add_argument("spoof_ip",type=str,action="store",required=False,nargs=1)
         args = parser.parse_args()
@@ -84,8 +84,7 @@ if __name__ == "__main__":
         src = args.spoof_ip
 
     printc(["Scanning Destination IP: ", str(ip), " Port: ", str(port)],[Fore.GREEN,Fore.RED,Fore.GREEN,Fore.RED])
-
+    print()
     result = scan(ip, port, src)
         
-    print()
     printc(["Port ",str(port), " at IP ",str(ip)," is ", str(result[2])],[Fore.GREEN,Fore.RED,Fore.GREEN,Fore.RED,Fore.YELLOW])
