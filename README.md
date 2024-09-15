@@ -24,8 +24,8 @@ python3 probeX.py [--help | -h] prints the help page
 
 The tool takes in 2 arguments:
 
-  \[destination ip address]
-  \[destination port]
+  \[dest_ip]
+  \[dest_port]
 
 ex usage:
 
