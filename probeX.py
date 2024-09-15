@@ -68,25 +68,27 @@ if __name__ == "__main__":
         src = None
 
     else:
-        parser.add_argument("-ip","--ip",type=str,action="store",required=True,metavar="Target IP to be scanned",nargs=1)
-        parser.add_argument("-p","--port",type=int,action="store",required=True,metavar="Target port to be scanned",nargs=1)
-        parser.add_argument("-s","--spoof",action="store_true")
-        parser.add_argument("spoof_ip",type=str,action="store",nargs=1)
+        parser.add_argument("ip",type=str,action="store",help="Target IP to be scanned",nargs=1)
+        parser.add_argument("port",type=int,action="store",help="Target port to be scanned",nargs=1)
+        parser.add_argument("-s","--spoof",action="store_true",help="Flag to spoof source IP")
+        parser.add_argument("spoof_ip",type=str,action="store",nargs="?")
         args = parser.parse_args()
 
         if(args.spoof):
-            if not args.spoof_ip:
-                printc("No source IP entered. Exiting...")
+            if(not args.spoof_ip):
+                print("No Spoof IP provided. Refer to help page or github page")
+                parser.print_help(sys.stderr)
                 exit()
-
+                
             printc("\nWARNING: SPOOFING SOURCE IP MAYBE ILLEGAL AND THE AUTHOR OF THIS TOOL IS NOT RESPONSIBLE FOR IT'S MISUSE. MAKE SURE YOU KNOW WHAT YOU ARE DOING",Fore.RED)
             printc("\n\nAre you sure you want to continue (type iamsure): ",Fore.WHITE)
             cont = input()
             if cont != "iamsure":
                 exit()
+            src = args.spoof_ip
         
-        ip = args.ip
-        port = args.port
+        ip = args.ip[0]
+        port = args.port[0]
         src = args.spoof_ip
 
     printc(["Scanning Destination IP: ", str(ip), " Port: ", str(port)],[Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.GREEN])
