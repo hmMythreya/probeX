@@ -6,6 +6,7 @@ from scapy.all import IP
 from scapy.all import TCP
 from scapy.all import ICMP
 from scapy.all import RandShort
+from scapy.all import fragment
 from argparse import ArgumentParser
 from terminalPrinter import terminalPrinter as printc
 from colorama import Fore
@@ -28,7 +29,7 @@ def scan(dest_ip, dest_port, src_ip):
 
     # Check if it is filtered
     for packet in unanswered:
-        return (packet.dst, packet.dport, "Filtered")
+        return "Filtered"
 
     # Check for open or Closed or Filtered
     for (send, recv) in answered:
@@ -37,17 +38,17 @@ def scan(dest_ip, dest_port, src_ip):
             if(flags == "SA"):
                 tcp_packet.flags = "R"
                 send_rst = sr(ip_packet / tcp_packet, timeout=1, verbose=False)
-                return (dest_ip, dest_port, "Open")
+                return "Open"
 
             elif (flags=="RA" or flags=="R"):
-                return (dest_ip, dest_port, "Closed")
+                return "Closed"
 
         elif(recv.haslayer(ICMP)):
             if(recv.getlayer(ICMP).type==3 and recv.getlayer(ICMP).code in [3,1,2,13]):
-                return (dest_ip, dest_port, "Filtered")
+                return "Filtered"
         
         else:
-            return (dest_ip, dest_port, "check")
+            return "check"
 
 # Main Function
 if __name__ == "__main__":
@@ -97,6 +98,6 @@ if __name__ == "__main__":
     result = scan(ip, port, src)
     end = time.process_time()
 
-    printc(["Port ",str(port), " at IP ",str(ip)," is ", result[2]],[Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.YELLOW])
+    printc(["Port ",str(port), " at IP ",str(ip)," is ", result],[Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.GREEN,Fore.WHITE,Fore.YELLOW])
     printc(["\nTotal time taken: ",str(round(end-start,3)),"s"],[Fore.WHITE,Fore.YELLOW,Fore.YELLOW])
     print()
